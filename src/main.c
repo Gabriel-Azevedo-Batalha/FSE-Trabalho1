@@ -197,7 +197,6 @@ int main(int argc, const char * argv[]) {
 		printf("Temperatura de Referência: %f\n", tempR);
 		printf("Temperatura Interna: %f\n", tempI);
 		printf("Temperatura Externa: %lf\n", tempE);
-		printf("timeC: %d\n", timeC);
 		printf("\nDigite 1 para alterar o estado\n");
 		printf("Digite 2 para alterar o modo\n");
 		printf("Digite outro numero para atualizar a tela\n");		
