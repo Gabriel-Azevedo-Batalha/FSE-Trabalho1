@@ -81,12 +81,12 @@ void *saveCSV(void *args){
 	}
 }
 
-void updateTemp(){
-
-	// Medicoes
+void getTemps(){
 	tempE = bmeGetTemp(&bme); // Temperatura Externa
 	tempI = requestIntTemp(uart); // Temperatura Interna
+}
 
+void updateTemp(){
 	// Temperatura de referencia
 	if(tempRefMode == POTENCIOMETRO){ // Potenciometro
 		tempR =	requestPotTemp(uart); 
@@ -143,7 +143,8 @@ void readCommands() {
 void *update(void *args) {
 
 	while(1) {
-		if(on) updateTemp(); // Atualiza temperaturas
+		getTemps(); // Medicoes
+		if(on) updateTemp(); // Atualiza temperaturas (Aplica PID e PWM)
 		lcdWriteTemperatures(on, tempRefMode, tempR, tempE, tempI); // Display LCD
 		readCommands();	// Leitura de comandos
 	}
@@ -161,8 +162,7 @@ int main(int argc, const char * argv[]) {
 	sendSisState(uart, on);
 
 	// Medicoes iniciais
-	tempE = bmeGetTemp(&bme); // Temperatura Externa
-	tempI = requestIntTemp(uart); // Temperatura Interna
+	getTemps();
 
 	// CSV Start
 	char filename[40];
@@ -197,6 +197,9 @@ int main(int argc, const char * argv[]) {
 		printf("Temperatura de Referência: %f\n", tempR);
 		printf("Temperatura Interna: %f\n", tempI);
 		printf("Temperatura Externa: %lf\n", tempE);
+		if(tempRefMode == CURVAS){
+			printf("Tempo na Curva: %d\n", timeC);
+		}
 		printf("\nDigite 1 para alterar o estado\n");
 		printf("Digite 2 para alterar o modo\n");
 		printf("Digite outro numero para atualizar a tela\n");		
